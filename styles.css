@@ -40,7 +40,7 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    animation: fadeOut 1s ease-in-out 3s forwards;
+    animation: fadeOut 1s ease-in-out 5s forwards;
 }
 
 @keyframes fadeOut {
@@ -72,6 +72,12 @@ body {
     margin: 10px 0;
 }
 
+.boot-detail {
+    font-size: 0.9em !important;
+    color: var(--text-secondary) !important;
+    animation: blink 1.5s step-end infinite;
+}
+
 .typing {
     animation: blink 1s step-end infinite;
 }
@@ -93,7 +99,7 @@ body {
 .loading-progress {
     height: 100%;
     background: linear-gradient(90deg, var(--parrot-cyan), var(--parrot-green));
-    animation: loading 3s ease-in-out forwards;
+    animation: loading 5s ease-in-out forwards;
 }
 
 @keyframes loading {
@@ -110,7 +116,7 @@ body {
         linear-gradient(135deg, var(--parrot-darker) 0%, var(--parrot-dark) 100%);
     background-size: 100px 100px, cover;
     position: relative;
-    animation: fadeIn 1s ease-in-out 3s forwards;
+    animation: fadeIn 1s ease-in-out 5s forwards;
     opacity: 0;
 }
 
@@ -173,33 +179,159 @@ body {
     color: var(--parrot-red);
 }
 
-/* Desktop Icons */
-.desktop-icons {
+/* Theme Switcher */
+.theme-switcher {
+    position: relative;
+}
+
+.theme-icon {
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.2s;
+}
+
+.theme-icon:hover {
+    transform: scale(1.2) rotate(20deg);
+    filter: drop-shadow(0 0 5px var(--parrot-cyan));
+}
+
+.theme-menu {
     position: absolute;
-    top: 60px;
-    left: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 100px);
-    gap: 30px;
-    padding: 20px;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: rgba(26, 29, 46, 0.98);
+    border: 1px solid var(--parrot-cyan);
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 150px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+}
+
+.theme-option {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+    border: 1px solid transparent;
+}
+
+.theme-option:hover {
+    background: rgba(6, 214, 160, 0.2);
+    border-color: var(--parrot-cyan);
+    transform: translateX(5px);
+}
+
+.theme-option.active {
+    background: rgba(6, 214, 160, 0.3);
+    border-color: var(--parrot-cyan);
+}
+
+/* Theme variations */
+body[data-theme="parrot-purple"] {
+    --parrot-cyan: #9d4edd;
+    --parrot-green: #7b2cbf;
+    --parrot-blue: #5a189a;
+}
+
+body[data-theme="kali"] {
+    --parrot-cyan: #367bf5;
+    --parrot-green: #2563eb;
+    --parrot-blue: #1d4ed8;
+    --parrot-dark: #0f172a;
+    --parrot-darker: #020617;
+}
+
+/* Desktop Icons - Circular Layout */
+.desktop-icons-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 800px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle-container {
+    position: relative;
+    width: 500px;
+    height: 500px;
+}
+
+.center-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+}
+
+.parrot-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--parrot-cyan);
+    box-shadow: 0 0 30px rgba(6, 214, 160, 0.5);
+    animation: rotateLogo 20s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes rotateLogo {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.center-text {
+    display: block;
+    color: var(--parrot-cyan);
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(6, 214, 160, 0.8);
 }
 
 .icon-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center;
+    --angle: calc(var(--index) * 45deg);
+    --radius: 200px;
+    transform: 
+        translate(-50%, -50%)
+        rotate(var(--angle))
+        translateY(calc(var(--radius) * -1))
+        rotate(calc(var(--angle) * -1));
+    transition: all 0.3s ease;
+}
+
+.icon-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 12px;
     transition: all 0.3s ease;
 }
 
-.icon-item:hover {
-    background: rgba(6, 214, 160, 0.1);
-    transform: translateY(-5px);
+.icon-item:hover .icon-wrapper {
+    background: rgba(6, 214, 160, 0.15);
+    transform: scale(1.3);
 }
 
-.icon-item img {
+.icon-item:hover {
+    z-index: 100;
+}
+
+.icon-wrapper img {
     width: 60px;
     height: 60px;
     margin-bottom: 8px;
@@ -207,15 +339,17 @@ body {
     transition: all 0.3s ease;
 }
 
-.icon-item:hover img {
-    filter: drop-shadow(0 0 15px var(--parrot-cyan));
+.icon-item:hover .icon-wrapper img {
+    filter: drop-shadow(0 0 20px var(--parrot-cyan));
+    transform: translateY(-5px);
 }
 
-.icon-item span {
+.icon-wrapper span {
     font-size: 12px;
     text-align: center;
     color: var(--text-primary);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
 }
 
 /* Dock */
@@ -341,6 +475,11 @@ body {
     height: 100%;
     overflow-y: auto;
     padding: 25px;
+}
+
+.content-scroll.scrollable {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
 }
 
 /* Custom Scrollbar */
@@ -823,11 +962,54 @@ h3 {
     line-height: 1.4;
 }
 
+.download-cv {
+    background: rgba(6, 214, 160, 0.1);
+    border: 2px solid var(--parrot-cyan);
+}
+
+.download-cv:hover {
+    background: rgba(6, 214, 160, 0.2);
+    border-color: var(--parrot-green);
+    transform: translateX(10px) scale(1.02);
+}
+
+.download-cv .resource-icon {
+    font-size: 40px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-    .desktop-icons {
-        grid-template-columns: repeat(auto-fill, 80px);
-        gap: 20px;
+    .circle-container {
+        width: 350px;
+        height: 350px;
+    }
+    
+    .icon-item {
+        --radius: 140px;
+    }
+    
+    .center-logo .parrot-logo {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .center-text {
+        font-size: 14px;
+    }
+    
+    .icon-wrapper img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .icon-wrapper span {
+        font-size: 10px;
     }
     
     .window {
