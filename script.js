@@ -1,9 +1,9 @@
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
-    // Boot sequence - show desktop after boot
+    // Boot sequence - show desktop after boot (5 seconds)
     setTimeout(() => {
         document.getElementById('desktop').style.display = 'block';
-    }, 3000);
+    }, 5000);
 
     // Clock
     function updateTime() {
@@ -22,6 +22,50 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTime();
     setInterval(updateTime, 1000);
 
+    // Theme Switcher
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeMenu = document.getElementById('theme-menu');
+    const themeOptions = document.querySelectorAll('.theme-option');
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('portfolioTheme') || 'parrot-green';
+    document.body.setAttribute('data-theme', savedTheme);
+    themeOptions.forEach(option => {
+        if (option.getAttribute('data-theme') === savedTheme) {
+            option.classList.add('active');
+        }
+    });
+
+    themeToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        themeMenu.style.display = themeMenu.style.display === 'none' ? 'block' : 'none';
+    });
+
+    themeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const theme = this.getAttribute('data-theme');
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('portfolioTheme', theme);
+            
+            // Update active state
+            themeOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Close menu
+            themeMenu.style.display = 'none';
+            
+            // Visual feedback
+            document.body.style.transition = 'all 0.5s ease';
+        });
+    });
+
+    // Close theme menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!themeToggle.contains(e.target) && !themeMenu.contains(e.target)) {
+            themeMenu.style.display = 'none';
+        }
+    });
+
     // Window Management
     let activeWindow = null;
     let zIndexCounter = 100;
@@ -38,14 +82,20 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
-    // Icon clicks - open windows
+    // Icon clicks - open windows (updated for circular layout)
     document.querySelectorAll('.icon-item, .dock-item').forEach(icon => {
-        icon.addEventListener('click', function() {
+        icon.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent event bubbling
             const windowId = this.getAttribute('data-window');
             if (windowId) {
                 openWindow(windowId);
             }
         });
+    });
+
+    // Prevent center logo from opening anything
+    document.querySelector('.center-logo')?.addEventListener('click', function(e) {
+        e.stopPropagation();
     });
 
     function openWindow(windowId) {
